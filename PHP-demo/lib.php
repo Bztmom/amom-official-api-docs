@@ -216,7 +216,7 @@ class req
      */
     protected function set_params($param = [])
     {
-        $param['signature'] = hash_hmac('sha256', http_build_query($param, '', '&'), SECRET_KEY);
+        $param['signature'] = hash_hmac('sha256', http_build_query($param, '', '&'), md5(SECRET_KEY));
         $this->params = $param;
         return $this;
     }

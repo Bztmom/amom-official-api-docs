@@ -33,7 +33,7 @@ class Mom:
 
     # 获取聚合详情列表
     def get_ticker(self, symbol=''):
-        self.api_method = '/api/open/ticker'
+        self.api_method = '/api/open/tickers'
         params = {
             'symbol': symbol,
         }
@@ -89,7 +89,7 @@ class Mom:
         return self.set_params(param).set_url().set_header().http_post().content
 
     # 取消订单
-    def post_cencelOrder(self, symbol, orderId):
+    def post_cancelOrder(self, symbol, orderId):
         self.api_method = '/api/spot/cancelOrder'
         param = collections.OrderedDict()
         param["orderId"] = orderId
@@ -98,13 +98,13 @@ class Mom:
         return self.set_params(param).set_url().set_header().http_post().content
 
     # 创建交易订单
-    def post_createOrder(self, symbol, amount, price, type):
+    def post_createOrder(self, symbol, quantity, price, side):
         self.api_method = '/api/spot/createOrder'
         param = collections.OrderedDict()
         param["price"] = price
-        param["amount"] = amount
+        param["quantity"] = quantity
         param["symbol"] = symbol
-        param["type"] = type
+        param["side"] = side
         param["timestamp"] = int(round(time.time() * 1000))
         return self.set_params(param).set_url().set_header().http_post().content
 
@@ -113,7 +113,8 @@ class Mom:
     def set_params(self, params=None):
         if params is None:
             params = {}
-        params['signature'] = hmac.new(self.secret_key, urllib.urlencode(params), digestmod=hashlib.sha256).hexdigest()
+        md5secret_key = hashlib.md5(self.secret_key).hexdigest()
+        params['signature'] = hmac.new(md5secret_key, urllib.urlencode(params), digestmod=hashlib.sha256).hexdigest()
         self.params = params
         return self
 

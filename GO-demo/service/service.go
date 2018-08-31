@@ -18,7 +18,7 @@ func Get_tickers(symbol ...string) string {
 	if (len(symbol) > 0) {
 		params["symbol"] = symbol[0]
 	}
-	url := "/api/open/ticker"
+	url := "/api/open/tickers"
 	return HttpRequest("GET", url, params)
 }
 
@@ -105,14 +105,14 @@ func Post_cencelOrder(symbol string, orderId string) string {
 	price	交易金额
 	t		交易状态 	sell 卖| buy 买
  */
-func Post_createOrder(symbol string, amount string, price string, t string) string {
+func Post_createOrder(symbol string, quantity string, price string, t string) string {
 	params := make(map[string]string)
-	keyList := []string{"price", "amount", "symbol", "type", "timestamp"}
+	keyList := []string{"price", "quantity", "symbol", "side", "timestamp"}
 	url := "/api/spot/createOrder"
 	params["symbol"] = symbol
-	params["amount"] = amount
+	params["quantity"] = quantity
 	params["price"] = price
-	params["type"] = t
+	params["side"] = t
 	params["timestamp"] = GetTime()
 
 	params["signature"] = SH256(params, config.SECRET_KEY, keyList)
@@ -142,7 +142,7 @@ func HttpRequest(t string, url string, params map[string]string) string {
 
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	request.Header.Add("api-key", config.ACCESS_KEY)
-	request.Header.Add("api-version", "V1.0")
+	request.Header.Add("api-version", "1")
 
 	response, err := httpClient.Do(request)
 

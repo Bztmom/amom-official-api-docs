@@ -24,7 +24,7 @@ class req
      */
     public function get_ticker($symbol = '')
     {
-        $this->api_method = '/api/open/ticker';
+        $this->api_method = '/api/open/tickers';
 
         // 可选参数获取指定交易对信息
         $param = [
@@ -178,16 +178,16 @@ class req
      * @param $type
      * @return mixed
      */
-    public function post_createOrder($symbol, $amount, $price, $type)
+    public function post_createOrder($symbol, $quantity, $price, $side)
     {
         $this->req_method = 'POST';
         $this->api_method = '/api/spot/createOrder';
 
         $param = [
             'price' => $price,
-            'amount' => $amount,
+            'quantity' => $quantity,
             'symbol' => $symbol,
-            'type' => $type,
+            'side' => $side,
             'timestamp' => $this->getMillisecond()
         ];
 
